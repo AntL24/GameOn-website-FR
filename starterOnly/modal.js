@@ -20,4 +20,12 @@ function launchModal() {
   modalbg.style.display = "block";
 }
 
+//close modal form
+function closeModal() {
+  modalbg.style.display = "none";
+}
+
+//close modal form when clicking on the "x" button. Class "close" is used for the "x" button
+const closeBtn = document.querySelector(".close");
+closeBtn.addEventListener("click", closeModal);
 
