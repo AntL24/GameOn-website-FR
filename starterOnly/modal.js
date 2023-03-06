@@ -32,19 +32,32 @@ closeBtn.addEventListener("click", closeModal);
 //close modal form when clicking outside of the form
 window.addEventListener("click", function (event) {
   if (event.target == modalbg) {
-    modalbg.style.display = "none";
+    closeModal();
   }
 });
 
 //Send form if conditions are met. Class "btn-submit" is used for the submit button
 const submitBtn = document.querySelector(".btn-submit");
 submitBtn.addEventListener("click", function (event) {
-  event.preventDefault();
+  event.preventDefault();//
   if (validate()) {
-    //The form name is reserve 
-    document.forms["reserve"].submit();
+    //Submit the form after success message is sent
+    openSuccessModal();
   }
 });
+
+
+//Open the success modal, and submit the form after 2 seconds
+function openSuccessModal() {
+  const successModal = document.querySelector(".success-message");
+  successModal.style.display = "block";
+  setTimeout(submitForm, 2000);
+}
+
+//Submit the form
+function submitForm() {
+  document.forms["reserve"].submit();
+}
 
 //Validate the form
 function validate() {
