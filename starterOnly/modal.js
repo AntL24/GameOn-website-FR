@@ -1,3 +1,4 @@
+//Change the navigation bar when the screen is too small
 function editNav() {
   var x = document.getElementById("myTopnav");
   if (x.className === "topnav") {
@@ -39,28 +40,26 @@ window.addEventListener("click", function (event) {
 //Send form if conditions are met. Class "btn-submit" is used for the submit button
 const submitBtn = document.querySelector(".btn-submit");
 submitBtn.addEventListener("click", function (event) {
-  event.preventDefault();//
-  if (validate()) {
+  event.preventDefault();
+  if (validate(event)) {
     //Submit the form after success message is sent
     openSuccessModal();
   }
 });
 
 
-//Open the success modal, and submit the form after 2 seconds
+//Display the success modal, and submit the form automatically after 2 seconds
 function openSuccessModal() {
-  const successModal = document.querySelector(".success-message");
+  const successModal = document.querySelector(".modal-success");
   successModal.style.display = "block";
-  setTimeout(submitForm, 2000);
 }
-
-//Submit the form
-function submitForm() {
-  document.forms["reserve"].submit();
-}
+  
 
 //Validate the form
-function validate() {
+function validate(e) {
+
+  e.preventDefault();
+
   // Get input values
   const firstNameInput = document.getElementById("first");
   const lastNameInput = document.getElementById("last");
@@ -74,14 +73,14 @@ function validate() {
   const errors = [];
 
   // Check first and last name
-  const nameRegex = /^[a-zA-Z]{2,}$/;
+  const nameRegex = /^[a-zA-Zéèàùç'-]{2,}$/;
   if (!nameRegex.test(firstNameInput.value.trim())) {
-    errors.push({input: firstNameInput, message: "Veuillez entrer un prénom valide (au moins 2 lettres)."});
+    errors.push({input: firstNameInput});
   } else {
     hideError(firstNameInput);
   }
   if (!nameRegex.test(lastNameInput.value.trim())) {
-    errors.push({input: lastNameInput, message: "Veuillez entrer un nom valide (au moins 2 lettres)."});
+    errors.push({input: lastNameInput});
   } else {
     hideError(lastNameInput);
   }
@@ -89,7 +88,7 @@ function validate() {
   // Check email
   const emailRegex = /^\S+@\S+\.\S+$/;
   if (!emailRegex.test(emailInput.value.trim())) {
-    errors.push({input: emailInput, message: "Veuillez entrer une adresse email valide."});
+    errors.push({input: emailInput});
   } else {
     hideError(emailInput);
   }
@@ -97,15 +96,22 @@ function validate() {
   // Check birthdate
   const birthdate = new Date(birthdateInput.value);
   if (isNaN(birthdate.getTime()) || birthdate >= new Date()) {
-    errors.push({input: birthdateInput, message: "Veuillez entrer une date de naissance valide."});
+    errors.push({input: birthdateInput});
+  } else {
+    hideError(birthdateInput);
+  }
+  //Check birthdate (not older than 125 years old)
+  const age = new Date().getFullYear() - birthdate.getFullYear();
+  if (age > 125) {
+    errors.push({input: birthdateInput});
   } else {
     hideError(birthdateInput);
   }
 
   // Check number of tournaments
-  const quantityRegex = /^[1-9]\d*$/;
+  const quantityRegex = /^[1-9]\d*$/;  
   if (!quantityRegex.test(quantityInput.value.trim())) {
-    errors.push({input: quantityInput, message: "Veuillez entrer un nombre de tournois valide."});
+    errors.push({input: quantityInput});
   } else {
     hideError(quantityInput);
   }
@@ -118,14 +124,14 @@ function validate() {
     }
   });
   if (!locationChecked) {
-    errors.push({input: locationInputs[0], message: "Veuillez sélectionner au moins une ville."});
+    errors.push({input: locationInputs[0]});
   } else {
     hideError(locationInputs[0]);
   }
 
   // Check conditions are accepted
   if (!conditionsInput.checked) {
-    errors.push({input: conditionsInput, message: "Veuillez accepter les conditions d'utilisation."});
+    errors.push({input: conditionsInput});
   } else {
     hideError(conditionsInput);
   }
@@ -137,19 +143,51 @@ function validate() {
     });
     return false;
   }
+  // If there are no errors, submit the form via AJAX to a mock server.
+  else {
 
-  return true;
+  //Display the success modal
+  openSuccessModal();
+
+  //Send data in JSON format to a fake API via fetch, for testing.
+  fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    body: JSON.stringify({
+      firstName: firstNameInput.value,
+      lastName: lastNameInput.value,
+      email: emailInput.value,
+      birthdate: birthdateInput.value,
+      quantity: quantityInput.value,
+      location: document.querySelector('input[name="location"]:checked').value,
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  })
+    .then(function(response) {
+      if (response.ok) {
+        // Traiter la réponse AJAX ici
+        return response.json(); //Had we not returned the response.json(), the next .then() could not access the data. Instead, it would have received a Promise object.
+      } else {
+        // Gérer les erreurs AJAX ici
+        throw new Error("Erreur lors de l'envoi des données du formulaire.");
+      }
+    })
+    .then(function(data) {
+      console.log("Données reçues:", data);
+    })
+    .catch(function(error) {
+      console.log("Erreur:", error);
+    });
+  }
 }
 
 //Hide or show the error message.
-function showError(input, message) {
+function showError(input) {
   const formControl = input.parentElement;
-  const errorText = formControl.querySelector(".error-text");
-  errorText.innerText = message;
-  formControl.classList.add("error");
+  formControl.setAttribute("data-error-visible", "true");
 }
 function hideError(input) {
   const formControl = input.parentElement;
-  formControl.querySelector(".error-text").innerText = "";
-  formControl.classList.remove("error");
+  formControl.setAttribute("data-error-visible", "false");
 }

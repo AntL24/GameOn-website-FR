@@ -41,14 +41,14 @@
             aux réservations... Places limitées !
           </p>
           <button class="btn-signup modal-btn">
-            je m'inscris
+            je M'inscris
           </button>
         </div>
         <div class="hero-img">
           <img src="./bg_img.jpg" alt="img" />
         </div>
         <button class="btn-signup modal-btn">
-          je m'inscris
+          je M'inscris
         </button>
       </div>
 
@@ -58,13 +58,12 @@
           <div class="modal-body">
             <form
               name="reserve"
-              action="index.html"
-              method="get"
-              onsubmit="return validate();"
+              id="reserve-form"
+              
             >
 
               <div
-                class="formData">
+                class="formData" data-error="Veuillez entrer un prénom valide (au moins deux caractères)" data-error-visible="false">
                 <label>Prénom</label><br>
                 <input
                   class="text-control"
@@ -74,11 +73,10 @@
                   minlength="2"
                   required
                 /><br>
-                <span class="error-text"></span>
               </div>
 
               <div
-                class="formData">
+                class="formData" data-error="Veuillez entrer un nom valide (au moins deux caractères)" data-error-visible="false">
                 <label>Nom</label><br>
                 <input
                   class="text-control"
@@ -87,11 +85,10 @@
                   name="last"
                   required
                 /><br>
-                <span class="error-text"></span>
               </div>
 
               <div
-                class="formData">
+                class="formData" data-error="Veuillez entrer une adresse mail valide. Ex : adresse@email.fr" data-error-visible="false">
                 <label>E-mail</label><br>
                 <input
                   class="text-control"
@@ -100,11 +97,10 @@
                   name="email"
                   required
                 /><br>
-                <span class="error-text"></span>
               </div>
 
               <div
-                class="formData">
+                class="formData" data-error="Veuillez entrer une date de naissance valide."  data-error-visible="false">
                 <label for="birthdate" >Date de naissance</label><br>
                 <input
                   class="text-control"
@@ -113,19 +109,17 @@
                   name="birthdate"
                   required
                 /><br>
-                <span class="error-text"></span>
               </div>
 
               <div
-                class="formData">
+                class="formData" data-error="Veuillez entrer un nombre de tournois valide (valeur numérique)." data-error-visible="false">
                 <label for="quantity">À combien de tournois GameOn avez-vous déjà participé ?</label><br>
-                <input type="number" class="text-control" id="quantity" name="quantity" min="0" max="99">
-                <span class="error-text"></span>
+                <input type="number" class="text-control" id="quantity" name="quantity">
               </div>
 
               <p class="text-label">À quel tournoi souhaitez-vous participer cette année ?</p>
                 <div
-                  class="formData">
+                  class="formData" data-error="Veuillez sélectionner au moins un tournoi." data-error-visible="false">
                   <input
                     class="checkbox-input"
                     type="radio"
@@ -197,11 +191,10 @@
                     <span class="checkbox-icon"></span>
                     Portland</label
                   >
-                  <span class="error-text"></span>
                 </div>
 
               <div
-                class="formData">
+                class="formData" data-error="Veuillez accepter les conditions d'utilisation."  data-error-visible="false">
                 <input class="checkbox-input" type="checkbox" id="checkbox1" checked />
                 <label class="checkbox2-label" for="checkbox1" required>
                   <span class="checkbox-icon"></span>
@@ -214,7 +207,6 @@
                   Je souhaite être prévenu des prochains évènements.
                 </label>
                 <br>
-                <span class="error-text"></span>
               </div>
 
               <input
@@ -224,11 +216,20 @@
                 value="C'est parti"
               />
 
-            </form>
-
-            <div class="success-message" style="display:none;">
-              <p>Votre inscription a été prise en compte !</p>
-            </div>   
+            </form> 
+          
+            <div class="modal-success" style="display:none;">
+              <div class="success-message">
+                <p>Merci pour votre inscription</p>
+              </div>
+              <input
+                class="btn-close-success"
+                type="submit"
+                class="button"
+                value="Fermer"
+                class="close"
+              />
+            </div>
 
           </div>
         </div>
