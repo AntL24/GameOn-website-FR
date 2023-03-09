@@ -559,5 +559,12 @@ footer {
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
+}
 
+.btn-close-success{
+  /* //Position the btn in the middle bottom of the modal */
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
 }
