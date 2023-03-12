@@ -98,6 +98,8 @@ img {
     right: 0;
     top: 0;
     color: white;
+    background-color:red;
+    border-radius: 15px;
   }
   .topnav.responsive a {
     float: none;
