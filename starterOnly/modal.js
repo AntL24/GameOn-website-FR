@@ -24,6 +24,15 @@ function launchModal() {
 //close modal form
 function closeModal() {
   modalbg.style.display = "none";
+  const form = document.querySelector("form");
+  //Reset the form if it has been submitted
+  if (form.getAttribute("data-submitted") == "true") {
+    form.reset();
+    form.setAttribute("data-submitted", "false");
+    //Hide success modal
+    const successModal = document.querySelector(".modal-success");
+    successModal.style.display = "none";
+  }
 }
 
 //close modal form when clicking on the "x" button. Class "close" is used for the "x" button
@@ -42,16 +51,18 @@ const submitBtn = document.querySelector(".btn-submit");
 submitBtn.addEventListener("click", function (event) {
   event.preventDefault();
   if (validate(event)) {
-    //Submit the form after success message is sent
     openSuccessModal();
   }
 });
 
 
-//Display the success modal, and submit the form automatically after 2 seconds
+//Display the success modal
 function openSuccessModal() {
   const successModal = document.querySelector(".modal-success");
   successModal.style.display = "block";
+  //Set submitted attribute of form to true
+  const form = document.querySelector("form");
+  form.setAttribute("data-submitted", "true");
 }
   
 
@@ -93,16 +104,9 @@ function validate(e) {
     hideError(emailInput);
   }
 
-  // Check birthdate
-  const birthdate = new Date(birthdateInput.value);
-  if (isNaN(birthdate.getTime()) || birthdate >= new Date()) {
-    errors.push({input: birthdateInput});
-  } else {
-    hideError(birthdateInput);
-  }
   //Check birthdate (not older than 125 years old)
-  const age = new Date().getFullYear() - birthdate.getFullYear();
-  if (age > 125) {
+  const age = new Date().getFullYear() - new Date(birthdateInput.value).getFullYear();
+  if (age > 125 || age < 18 || isNaN(age)) {
     errors.push({input: birthdateInput});
   } else {
     hideError(birthdateInput);
@@ -166,10 +170,8 @@ function validate(e) {
   })
     .then(function(response) {
       if (response.ok) {
-        // Traiter la réponse AJAX ici
-        return response.json(); //Had we not returned the response.json(), the next .then() could not access the data. Instead, it would have received a Promise object.
+        return response.json();
       } else {
-        // Gérer les erreurs AJAX ici
         throw new Error("Erreur lors de l'envoi des données du formulaire.");
       }
     })
