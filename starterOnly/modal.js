@@ -24,18 +24,19 @@ function launchModal() {
 //close modal form
 function closeModal() {
   modalbg.style.display = "none";
-  const form = document.querySelector("form");
-  //Reset the form if it has been submitted
-  if (form.getAttribute("data-submitted") == "true") {
-    form.reset();
-    form.setAttribute("data-submitted", "false");
-    //Hide success modal
-    const successModal = document.querySelector(".modal-success");
-    successModal.style.display = "none";
-  }
+  //Hide success modal
+  const successModal = document.querySelector(".modal-success");
+  successModal.style.display = "none";
 }
 
-//close modal form when clicking on the "x" button. Class "close" is used for the "x" button
+//Reset form
+function resetForm() {
+  const form = document.querySelector("form");
+  form.reset();
+  form.setAttribute("data-submitted", "false");
+}
+
+// //close modal form when clicking on the "x" button. Class "close" is used for the "x" button
 const closeBtn = document.querySelector(".close");
 closeBtn.addEventListener("click", closeModal);
 
@@ -63,6 +64,8 @@ function openSuccessModal() {
   //Set submitted attribute of form to true
   const form = document.querySelector("form");
   form.setAttribute("data-submitted", "true");
+  //Reset the form
+  resetForm();
 }
   
 
