@@ -36,7 +36,7 @@ function resetForm() {
   form.setAttribute("data-submitted", "false");
 }
 
-// //close modal form when clicking on the "x" button. Class "close" is used for the "x" button
+//close modal form when clicking on the "x" button. Class "close" is used for the "x" button
 const closeBtn = document.querySelector(".close");
 closeBtn.addEventListener("click", closeModal);
 
@@ -52,6 +52,7 @@ const submitBtn = document.querySelector(".btn-submit");
 submitBtn.addEventListener("click", function (event) {
   event.preventDefault();
   if (validate(event)) {
+    resetForm();
     openSuccessModal();
   }
 });
@@ -64,8 +65,6 @@ function openSuccessModal() {
   //Set submitted attribute of form to true
   const form = document.querySelector("form");
   form.setAttribute("data-submitted", "true");
-  //Reset the form
-  resetForm();
 }
   
 
@@ -81,13 +80,15 @@ function validate(e) {
   const birthdateInput = document.getElementById("birthdate");
   const quantityInput = document.getElementById("quantity");
   const locationInputs = document.querySelectorAll('input[name="location"]');
+  const locationOfChoice = document.querySelector('input[name="location"]:checked').value
   const conditionsInput = document.getElementById("checkbox1");
 
   // Create an array to store errors
   const errors = [];
 
-  // Check first and last name
-  const nameRegex = /^[a-zA-Zéèàùç'-]{2,}$/;
+  // Check first and last name. Spaces between first and last name are allowed.
+  const nameRegex = /^[a-zA-Zéèàùç'-]{2,}(\s[a-zA-Zéèàùç'-]{2,})?$/;
+  // const nameRegex = /^[a-zA-Zéèàùç'-]{2,}$/;
   if (!nameRegex.test(firstNameInput.value.trim())) {
     errors.push({input: firstNameInput});
   } else {
@@ -165,7 +166,7 @@ function validate(e) {
       email: emailInput.value,
       birthdate: birthdateInput.value,
       quantity: quantityInput.value,
-      location: document.querySelector('input[name="location"]:checked').value,
+      location: locationOfChoice,
     }),
     headers: {
       'Content-type': 'application/json; charset=UTF-8',
